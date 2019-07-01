@@ -96,7 +96,7 @@ public final class PcapNetworkInterface {
           }
           else {
             linkLayerAddresses.add(
-              LinkLayerAddress.getByAddress(ByteArrays.getSubArray(addr, 0, addrLength))
+              LinkLayerAddress.getByAddress(ByteArrays.getSubArray(addr, 0, Math.min(addrLength, addr.length)))
             );
           }
         }
