@@ -92,10 +92,7 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
     return new Builder(this);
   }
 
-  /**
-   * @author Leo Ma
-   * @since pcap4j 1.8.3
-   */
+
   public static final class Builder extends AbstractBuilder
       implements LengthBuilder<GtpV1ExtPduSessionContainerPacket> {
 
@@ -117,7 +114,6 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
       // Do nothing, just used to create a Builder without fields setting
     }
 
-    /** @param packet packet */
     public Builder(GtpV1ExtPduSessionContainerPacket packet) {
       this.extHeaderLength = packet.header.extHeaderlength;
       this.pduType = packet.header.pduType;
@@ -251,65 +247,66 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
   }
 
   /**
-   *  PDI Session Container GTP Extension Header which carry PDU session information
-   *
-   * <pre style="white-space: pre;">
-   *    8     7     6     5     4     3     2     1
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |            Extension Header Length            |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |             PDU Session Container             |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |         Next Extenstion Header Type           |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * </pre>
-   *
-   * The PDU Session Container has a variable length and its content varies depending on
-   * PDU Type and PPP.
-   *
-   * <pre style="white-space: pre;">
-   * PDU Type=0 and PPP is false:
-   *
-   *    8     7     6     5     4     3     2     1
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |       PDU Type(=0)    |         Spare         |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * | PPP | RQI |        QoS Flow Identifier        |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   *
-   * PDU Type=0 and PPP is true:
-   *
-   *    8     7     6     5     4     3     2     1
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |       PDU Type(=0)    |         Spare         |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * | PPP | RQI |        QoS Flow Identifier        |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |          PPI    |         Spare               |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |                    Padding                    |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |                    Padding                    |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |                    Padding                    |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   *
-   * PDU Type=1:
-   *
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |       PDU Type(=1)    |         Spare         |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |   Spare   |        QoS Flow Identifier        |
-   * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * </pre>
-   *
-   * @see <a href=
-   *     "https://www.etsi.org/deliver/etsi_ts/129200_129299/129281/15.04.00_60/ts_129281v150400p.pdf">ETSI
-   *     TS 129 281 V15.4.0(2018-09)</a>
    * @author Leo Ma
    * @since pcap4j 1.8.3
    */
   public static final class GtpV1ExtPduSessionContainerHeader extends AbstractHeader {
+     /**
+      *  PDI Session Container GTP Extension Header which carry PDU session information
+      *
+      *
+      * @see <a href=
+      *     "https://www.etsi.org/deliver/etsi_ts/129200_129299/129281/15.04.00_60/ts_129281v150400p.pdf">ETSI
+      *     TS 129 281 V15.4.0(2018-09)</a>
+      *     <pre style="white-space: pre;">
+      * d8     7     6     5     4     3     2     1
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |            Extension Header Length            |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |             PDU Session Container             |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |         Next Extenstion Header Type           |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      *  </pre>
+      *     The PDU session container has a variable length and its content is specified in
+      * @see <a href=
+      *     "https://www.etsi.org/deliver/etsi_ts/138400_138499/138415/15.01.00_60/ts_138415v150100p.pdf">ETSI
+      *     TS 138 415 V15.1.0(2018-09)</a>
+      *     <p>DL PDU Session Information frames PDU Type=0 and PPP is false
+      *     <pre style="white-space: pre;">
+      * 8     7     6     5     4     3     2     1
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |       PDU Type(=0)    |         Spare         |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * | PPP | RQI |        QoS Flow Identifier        |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * </pre>
+      *     PDU Type=0 and PPP is true
+      *     <pre style="white-space: pre;">
+      * 8     7     6     5     4     3     2     1
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |       PDU Type(=0)    |         Spare         |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * | PPP | RQI |        QoS Flow Identifier        |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |          PPI    |         Spare               |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |                    Padding                    |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |                    Padding                    |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |                    Padding                    |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * </pre>
+      *     UL PDU Session Information frames PDU Type=1
+      *     <pre style="white-space: pre;">
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |       PDU Type(=1)    |         Spare         |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * |   Spare   |        QoS Flow Identifier        |
+      * +-----+-----+-----+-----+-----+-----+-----+-----+
+      * </pre>
+      */
 
       private static final long serialVersionUID = 7361463927403475935L;
 
@@ -318,14 +315,14 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
       private static final int PDU_TYPE_AND_SPARE_OFFSET = LENGTH_OFFSET + LENGTH_SIZE;
       private static final int PDU_TYPE_AND_SPARE_SIZE = ByteArrays.BYTE_SIZE_IN_BYTES;
 
-      // DL PDU SESSION INFORMATION (PDU Type 0)
-      // Common fields
+      /** DL PDU SESSION INFORMATION (PDU Type 0) */
+      /** Common fields */
       private static final int PPP_AND_RQI_AND_QFI_OFFSET =
           PDU_TYPE_AND_SPARE_OFFSET + PDU_TYPE_AND_SPARE_SIZE;
 
       private static final int PPP_AND_RQI_AND_QFI_SIZE = ByteArrays.BYTE_SIZE_IN_BYTES;
 
-      // PPI field(presene in case PPP is true)
+      /** PPI field(presene in case PPP is true) */
       private static final int PPI_AND_SPARE_OFFSET =
           PPP_AND_RQI_AND_QFI_OFFSET
               + PPP_AND_RQI_AND_QFI_SIZE; // should be exist only when PDU Type=0 and PPP flag is true.
@@ -337,7 +334,7 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
       private static final int PADDING_AND_NEXT_EXTENSION_HEADER_TYPE_SIZE =
           ByteArrays.INT_SIZE_IN_BYTES;
 
-      // UL PDU SESSION INFORMATION (PUD Type 1)
+      /** UL PDU SESSION INFORMATION (PUD Type 1) */
       private static final int SPARE_AND_QFI_OFFSET =
           PDU_TYPE_AND_SPARE_OFFSET + PDU_TYPE_AND_SPARE_SIZE;
 
@@ -354,11 +351,18 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
       private final byte pduType;
       private final byte spare1;
       private byte spare2;
+
+      /** UL Common */
       private boolean ppp; // Paging Policy Presence field
+
       private boolean rqi; // Reflective QoS Indicator field
       private byte qfi; // Qos Flow Identifier field
+
+      /** UL PPI(presence in case ppp is true) */
       private Byte ppi; // Paging Policy Indicator field
+
       private byte[] padding;
+
       private GtpV1ExtensionHeaderType nextExtHeaderType =
           GtpV1ExtensionHeaderType.NO_MORE_EXTENSION_HEADERS;
 
@@ -450,12 +454,12 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
         }
       }
 
-      /** @return extHeaderlength */
+      /** @return length */
       public byte getExtensionHeaderLength() {
         return extHeaderlength;
       }
 
-      /** @return extHeaderlength as int */
+      /** @return length as int */
       public int getLengthAsInt() {
         return 0xFF & extHeaderlength;
       }
@@ -480,7 +484,7 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
         return qfi;
       }
 
-      /** @return ppi. Maybe null. */
+      /** @return ppi */
       public Byte getPpi() {
         return ppi;
       }
@@ -586,25 +590,25 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
         return result;
       }
 
-        @Override
-        public boolean equals(Object o) {
-          if (this == o) {
-            return true;
-          }
-          if (o == null || getClass() != o.getClass()) {
-            return false;
-          }
-
-          GtpV1ExtPduSessionContainerHeader that = (GtpV1ExtPduSessionContainerHeader) o;
-          return extHeaderlength == that.extHeaderlength
-              && pduType == that.pduType
-              && spare1 == that.spare1
-              && spare2 == that.spare2
-              && ppp == that.ppp
-              && rqi == that.rqi
-              && qfi == that.qfi
-              && ppi.equals(that.ppi)
-              && nextExtHeaderType.equals(that.nextExtHeaderType);
+      @Override
+      public boolean equals(Object o) {
+        if (this == o) {
+          return true;
         }
+        if (o == null || getClass() != o.getClass()) {
+          return false;
+        }
+
+        GtpV1ExtPduSessionContainerHeader that = (GtpV1ExtPduSessionContainerHeader) o;
+        return extHeaderlength == that.extHeaderlength
+            && pduType == that.pduType
+            && spare1 == that.spare1
+            && spare2 == that.spare2
+            && ppp == that.ppp
+            && rqi == that.rqi
+            && qfi == that.qfi
+            && ppi.equals(that.ppi)
+            && nextExtHeaderType.equals(that.nextExtHeaderType);
+      }
   }
 }
