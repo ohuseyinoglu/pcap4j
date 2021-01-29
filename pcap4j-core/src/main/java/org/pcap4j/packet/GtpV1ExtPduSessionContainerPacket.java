@@ -65,17 +65,13 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
   }
 
   private GtpV1ExtPduSessionContainerPacket(Builder builder) {
-    if (builder == null) {
-      throw new NullPointerException("builder must not be null.");
-    }
-    if (builder.nextExtensionHeaderType == null) {
+    if (builder == null || builder.nextExtHeaderType == null) {
       StringBuilder sb = new StringBuilder();
-      sb.append(" builder.nextExtensionHeaderType: ")
-          .append(builder.nextExtensionHeaderType);
+      sb.append("builder: ")
+          .append(builder)
+          .append(" builder.nextExtensionHeaderType: ")
+          .append(builder.nextExtHeaderType);
       throw new NullPointerException(sb.toString());
-    }
-    if (builder.ppi != null && builder.spare2 == null) {
-      throw new NullPointerException("builder.spare2 must not be null if builder.ppi is not null.");
     }
 
     this.payload = builder.payloadBuilder != null ? builder.payloadBuilder.build() : null;
@@ -104,19 +100,18 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
   public static final class Builder extends AbstractBuilder
       implements LengthBuilder<GtpV1ExtPduSessionContainerPacket> {
 
-    private byte extensionHeaderLength;
+    private byte extHeaderLength;
     private byte pduType;
     private byte spare1;
-    private boolean ppp;
-    private boolean rqi;
-    private byte qfi;
-    private Byte ppi;
+    private boolean ppp; // Paging Policy Presence field
+    private boolean rqi; // Reflective QoS Indicator field
+    private byte qfi; // Qos Flow Identifier field
+    private Byte ppi; // Paging Policy Indicator field
     private Byte spare2;
-    private byte[] padding;
-    private GtpV1ExtensionHeaderType nextExtensionHeaderType;
+    private byte[] padding = new byte[] {0x00, 0x00, 0x00};
+    private GtpV1ExtensionHeaderType nextExtHeaderType;
     private Packet.Builder payloadBuilder;
     private boolean correctLengthAtBuild;
-    private boolean paddingAtBuild;
 
     /** */
     public Builder() {
@@ -125,7 +120,7 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
 
     /** @param packet packet */
     public Builder(GtpV1ExtPduSessionContainerPacket packet) {
-      this.extensionHeaderLength = packet.header.extensionHeaderLength;
+      this.extHeaderLength = packet.header.extensionHeaderLength;
       this.pduType = packet.header.pduType;
       this.spare1 = packet.header.spare1;
       this.ppp = packet.header.ppp;
@@ -134,16 +129,16 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
       this.ppi = packet.header.ppi;
       this.spare2 = packet.header.spare2;
       this.padding = packet.header.padding;
-      this.nextExtensionHeaderType = packet.header.nextExtensionHeaderType;
+      this.nextExtHeaderType = packet.header.nextExtensionHeaderType;
       this.payloadBuilder = packet.payload != null ? packet.payload.getBuilder() : null;
     }
 
     /**
-     * @param extensionHeaderLength Extension Header Length
+     * @param extHeaderLength header length in unit of octets
      * @return this Builder object for method chaining.
      */
-    public Builder extensionHeaderLength(byte extensionHeaderLength) {
-      this.extensionHeaderLength = extensionHeaderLength;
+    public Builder extensionHeaderLength(byte extHeaderLength) {
+      this.extHeaderLength = extHeaderLength;
       return this;
     }
 
@@ -196,16 +191,12 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
      * @param ppi Paging Policy Indicator
      * @return this Builder object for method chaining.
      */
-    public Builder ppi(Byte ppi) {
+    public Builder ppi(byte ppi) {
       this.ppi = ppi;
       return this;
     }
 
     /**
-     * The second spare field.
-     * If ppi is set to non-null, spare2 must be set to non-null.
-     * If ppi is set to null, the value set to spare2 will be ignored at build.
-     *
      * @param spare2 second spare field
      * @return this Builder object for method chaining.
      */
@@ -224,11 +215,11 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
     }
 
     /**
-     * @param nextExtensionHeaderType Next Extension Header Type
+     * @param nextExtensionHeaderType nextExtensionHeaderType
      * @return this Builder object for method chaining.
      */
     public Builder nextExtensionHeaderType(GtpV1ExtensionHeaderType nextExtensionHeaderType) {
-      this.nextExtensionHeaderType = nextExtensionHeaderType;
+      this.nextExtHeaderType = nextExtensionHeaderType;
       return this;
     }
 
@@ -246,15 +237,6 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
     @Override
     public Builder correctLengthAtBuild(boolean correctLengthAtBuild) {
       this.correctLengthAtBuild = correctLengthAtBuild;
-      return this;
-    }
-
-    /**
-     * @param paddingAtBuild paddingAtBuild
-     * @return this Builder object for method chaining.
-     */
-    public Builder paddingAtBuild(boolean paddingAtBuild) {
-      this.paddingAtBuild = paddingAtBuild;
       return this;
     }
 
@@ -279,7 +261,7 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
    * +-----+-----+-----+-----+-----+-----+-----+-----+
    * |             PDU Session Container             |
    * +-----+-----+-----+-----+-----+-----+-----+-----+
-   * |         Next Extension Header Type            |
+   * |         Next Extenstion Header Type           |
    * +-----+-----+-----+-----+-----+-----+-----+-----+
    * </pre>
    *
@@ -372,10 +354,10 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
       private byte extensionHeaderLength;
       private final byte pduType;
       private final byte spare1;
-      private boolean ppp;
-      private boolean rqi;
-      private byte qfi;
-      private Byte ppi;
+      private boolean ppp; // Paging Policy Presence field
+      private boolean rqi; // Reflective QoS Indicator field
+      private byte qfi; // Qos Flow Identifier field
+      private Byte ppi; // Paging Policy Indicator field
       private Byte spare2;
       private byte[] padding;
       private GtpV1ExtensionHeaderType nextExtensionHeaderType =
@@ -456,28 +438,13 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
         this.qfi = builder.qfi;
         this.ppi = builder.ppi;
         this.spare2 = builder.spare2;
-        this.nextExtensionHeaderType = builder.nextExtensionHeaderType;
-
-        if (builder.paddingAtBuild) {
-          int mod = measureLengthWithoutPadding() % 4;
-          if (mod != 0) {
-            this.padding = new byte[4 - mod];
-          } else {
-            this.padding = new byte[0];
-          }
-        } else {
-          if (builder.padding != null) {
-            this.padding = new byte[builder.padding.length];
-            System.arraycopy(builder.padding, 0, padding, 0, padding.length);
-          } else {
-            this.padding = new byte[0];
-          }
-        }
+        this.padding = Arrays.copyOf(builder.padding, builder.padding.length);
+        this.nextExtensionHeaderType = builder.nextExtHeaderType;
 
         if (builder.correctLengthAtBuild) {
           this.extensionHeaderLength = (byte) (length() / 4);
         } else {
-          this.extensionHeaderLength = builder.extensionHeaderLength;
+          this.extensionHeaderLength = builder.extHeaderLength;
         }
       }
 
@@ -499,37 +466,22 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
     /** @return spare 1 (the spare field between PDU type and PPP) */
       public byte getSpare1() { return spare1; }
 
-      /**
-       * Paging Policy Presence field.
-       *
-       * @return true if the value of PPP field (the 9th bit of PDU Session Container) is 0; false otherwise. */
+      /** @return true if the value of PPP field (the 9th bit of PDU Session Container) is 0; false otherwise. */
       public boolean getPpp() {
         return ppp;
       }
 
-      /**
-       * Reflective QoS Indicator field.
-       *
-       * @return true if the value of RQI field (the 10th bit of PDU Session Container) is 0; false otherwise.
-       */
+      /** @return true if the value of RQI field (the 10th bit of PDU Session Container) is 0; false otherwise. */
       public boolean getRqi() {
         return rqi;
       }
 
-      /**
-       * Qos Flow Identifier field.
-       *
-       * @return qfi
-       */
+      /** @return qfi */
       public byte getQfi() {
         return qfi;
       }
 
-      /**
-       * Paging Policy Indicator field.
-       *
-       * @return ppi. Maybe null.
-       */
+      /** @return ppi. Maybe null. */
       public Byte getPpi() {
         return ppi;
       }
@@ -578,13 +530,12 @@ public class GtpV1ExtPduSessionContainerPacket extends AbstractPacket {
         return rawFields;
       }
 
-      private int measureLengthWithoutPadding() {
-        return ppi == null ? 4 : 5;
-      }
-
       @Override
       protected int calcLength() {
-        return measureLengthWithoutPadding() + padding.length;
+        if (ppi != null) {
+          return 5 + padding.length;
+        }
+        return 4 + padding.length;
       }
 
       @Override
